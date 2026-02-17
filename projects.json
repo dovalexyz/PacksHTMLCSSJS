@@ -4,5 +4,11 @@
     "title": "Login Screen",
     "icon": "👤",
     "description": ""
+  },
+  {
+    "filename": "register.html",
+    "title": "SignUp Screen",
+    "icon": "🔑",
+    "description": ""
   }
 ]
