@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Agent | Registration</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg-dark: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background: var(--bg-dark);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .star-field { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: twinkle var(--duration) ease-in-out infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: var(--opacity); transform: scale(1); } }
+
+        .cursor-glow {
+            position: fixed; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(112, 0, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%);
+            z-index: -1; mix-blend-mode: screen; transition: opacity 0.3s;
+        }
+
+        .scene-3d { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: -1; transform-style: preserve-3d; }
+        .cube { position: absolute; width: 120px; height: 120px; transform-style: preserve-3d; animation: rotateCube 25s infinite linear; }
+        .cube.c1 { top: 15%; right: 15%; animation-duration: 30s; }
+        .cube.c2 { bottom: 15%; left: 15%; width: 60px; height: 60px; animation-duration: 20s; animation-direction: reverse; }
+
+        .face {
+            position: absolute; width: 100%; height: 100%;
+            border: 1px solid rgba(112, 0, 255, 0.4); background: rgba(112, 0, 255, 0.02);
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.1);
+        }
+        .face:nth-child(1) { transform: rotateY(0deg) translateZ(60px); }
+        .face:nth-child(2) { transform: rotateY(90deg) translateZ(60px); }
+        .face:nth-child(3) { transform: rotateY(180deg) translateZ(60px); }
+        .face:nth-child(4) { transform: rotateY(-90deg) translateZ(60px); }
+        .face:nth-child(5) { transform: rotateX(90deg) translateZ(60px); }
+        .face:nth-child(6) { transform: rotateX(-90deg) translateZ(60px); }
+
+        .c2 .face { transform: rotateY(0deg) translateZ(30px); }
+        .c2 .face:nth-child(1) { transform: rotateY(0deg) translateZ(30px); }
+        .c2 .face:nth-child(2) { transform: rotateY(90deg) translateZ(30px); }
+        .c2 .face:nth-child(3) { transform: rotateY(180deg) translateZ(30px); }
+        .c2 .face:nth-child(4) { transform: rotateY(-90deg) translateZ(30px); }
+        .c2 .face:nth-child(5) { transform: rotateX(90deg) translateZ(30px); }
+        .c2 .face:nth-child(6) { transform: rotateX(-90deg) translateZ(30px); }
+
+        @keyframes rotateCube { 0% { transform: rotateX(0deg) rotateY(0deg); } 100% { transform: rotateX(360deg) rotateY(360deg); } }
+
+        .register-card {
+            position: relative; width: 450px; padding: 40px 40px;
+            background: rgba(10, 10, 10, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 4px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); transform-style: preserve-3d;
+        }
+
+        .corner {
+            position: absolute; width: 20px; height: 20px; border: 2px solid var(--secondary);
+            transition: 0.3s; box-shadow: 0 0 10px var(--secondary);
+        }
+        .top-left { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+        .top-right { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+        .bottom-right { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+        .register-card:hover .corner { width: 40px; height: 40px; box-shadow: 0 0 20px var(--secondary); }
+        .content-layer { transform: translateZ(40px); }
+
+        h2 {
+            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 2em; color: #fff;
+            text-align: center; margin-bottom: 25px; letter-spacing: 3px;
+            text-transform: uppercase; text-shadow: 0 0 10px rgba(112, 0, 255, 0.4);
+        }
+
+        .input-group { position: relative; margin-bottom: 25px; }
+        .input-group input {
+            width: 100%; padding: 10px 0; font-size: 15px; color: #fff; background: transparent;
+            border: none; border-bottom: 1px solid rgba(255,255,255,0.3); outline: none; transition: 0.3s;
+            font-family: 'Rajdhani', sans-serif; letter-spacing: 1px;
+        }
+        .input-group label {
+            position: absolute; top: 0; left: 0; padding: 10px 0; font-size: 15px; color: rgba(255,255,255,0.5);
+            pointer-events: none; transition: 0.3s; font-family: 'Rajdhani', sans-serif;
+        }
+        .input-group input:focus ~ label, .input-group input:valid ~ label { top: -18px; font-size: 11px; color: var(--secondary); font-weight: bold; }
+        .input-group input:focus { border-bottom: 1px solid var(--secondary); box-shadow: 0 5px 10px -5px rgba(112, 0, 255, 0.2); }
+
+        .terms-box {
+            display: flex; align-items: center; margin-bottom: 25px; cursor: pointer;
+            font-size: 0.8em; color: rgba(255,255,255,0.7); user-select: none;
+        }
+        .terms-box input { display: none; }
+        .checkmark {
+            width: 16px; height: 16px; border: 1px solid var(--secondary); margin-right: 10px;
+            display: flex; justify-content: center; align-items: center; transition: 0.3s;
+            box-shadow: 0 0 5px rgba(112, 0, 255, 0.2);
+        }
+        .checkmark::after {
+            content: ''; width: 8px; height: 8px; background: var(--secondary);
+            opacity: 0; transition: 0.2s; box-shadow: 0 0 10px var(--secondary);
+        }
+        .terms-box input:checked ~ .checkmark::after { opacity: 1; }
+        .terms-box:hover .checkmark { box-shadow: 0 0 15px var(--secondary); }
+
+        .btn-register {
+            width: 100%; padding: 12px; background: transparent; color: var(--secondary);
+            border: 1px solid var(--secondary); font-size: 16px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 2px; cursor: pointer; transition: 0.3s; font-family: 'Rajdhani', sans-serif;
+            position: relative; overflow: hidden;
+        }
+        .btn-register::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(112, 0, 255, 0.2), transparent); transition: 0.5s;
+        }
+        .btn-register:hover::before { left: 100%; }
+        .btn-register:hover { background: var(--secondary); color: #fff; box-shadow: 0 0 30px var(--secondary); }
+
+        .footer-links { margin-top: 20px; text-align: center; font-size: 0.85em; }
+        .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; transition: 0.3s; }
+        .footer-links a span { color: var(--secondary); font-weight: bold; }
+        .footer-links a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="star-field" id="starField"></div>
+    <div class="scene-3d">
+        <div class="cube c1"><div class="face"></div><div class="face"></div><div class="face"></div><div class="face"></div><div class="face"></div><div class="face"></div></div>
+        <div class="cube c2"><div class="face"></div><div class="face"></div><div class="face"></div><div class="face"></div><div class="face"></div><div class="face"></div></div>
+    </div>
+
+    <div class="register-card" id="tiltCard">
+        <div class="corner top-left"></div><div class="corner top-right"></div>
+        <div class="corner bottom-left"></div><div class="corner bottom-right"></div>
+        <div class="content-layer">
+            <h2>New Agent</h2>
+            <form id="registerForm">
+                <div class="input-group">
+                    <input type="text" id="regName" required>
+                    <label>Codename / Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="regEmail" required>
+                    <label>Quantum Mail</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="regPassword" required>
+                    <label>Security Key</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="regConfirm" required>
+                    <label>Confirm Security Key</label>
+                </div>
+                <label class="terms-box">
+                    <input type="checkbox" required>
+                    <span class="checkmark"></span>
+                    Accept Protocol Terms & Conditions
+                </label>
+                <button type="submit" class="btn-register">Initialize Registration</button>
+                <div class="footer-links">
+                    <a href="login.html">Already have an ID? <span>Login Here</span></a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const starField = document.getElementById('starField');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const duration = Math.random() * 3 + 2;
+            const size = Math.random() * 2 + 1;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--opacity', Math.random());
+            starField.appendChild(star);
+        }
+
+        const cursorGlow = document.getElementById('cursorGlow');
+        document.addEventListener('mousemove', (e) => {
+            requestAnimationFrame(() => {
+                cursorGlow.style.left = e.clientX + 'px';
+                cursorGlow.style.top = e.clientY + 'px';
+            });
+        });
+
+        const card = document.getElementById('tiltCard');
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+        document.addEventListener('mouseleave', () => {
+            card.style.transition = 'transform 0.5s ease';
+            card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            setTimeout(() => { card.style.transition = 'none'; }, 500);
+        });
+        document.addEventListener('mouseenter', () => { card.style.transition = 'none'; });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // PASTE YOUR CONFIG HERE
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const regForm = document.getElementById('registerForm');
+
+        regForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+            const btn = document.querySelector('.btn-register');
+
+            if(pass !== confirm) {
+                alert("SECURITY KEYS DO NOT MATCH");
+                return;
+            }
+
+            const originalText = btn.innerText;
+            btn.innerText = "PROCESSING...";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+                await updateProfile(userCredential.user, { displayName: name });
+                
+                console.log("Registered:", userCredential.user);
+                alert("REGISTRATION SUCCESSFUL. REDIRECTING...");
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error(error);
+                alert("REGISTRATION ERROR: " + error.message);
+                btn.innerText = originalText;
+            }
+        });
+    </script>
+</body>
+</html>
