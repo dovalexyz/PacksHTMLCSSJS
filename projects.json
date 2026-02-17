@@ -1,14 +1,19 @@
 [
   {
-    "filename": "login.html",
-    "title": "Login Screen",
-    "icon": "👤",
-    "description": ""
-  },
-  {
     "filename": "register.html",
     "title": "SignUp Screen",
     "icon": "🔑",
     "description": ""
+  },
+  {
+    "filename": "login.html",
+    "title": "Login Screen",
+    "icon": "👤",
+    "description": "An interactive login screen with 3D effects and a touch of cyberpunk theme.",
+    "tags": [
+      "HTML",
+      "CSS",
+      "JS"
+    ]
   }
 ]
