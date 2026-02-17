@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuValle Deluxe | Aurora Glass</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* --- 1. GENERAL SETTINGS & VARIABLES --- */
+        :root {
+            /* DuValle Deluxe Colors */
+            --glass-bg: rgba(255, 255, 255, 0.65); /* Milky transparency */
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            
+            --accent-color: #7B2CBF; /* Royal Purple */
+            --accent-glow: 0 0 20px rgba(123, 44, 191, 0.4);
+            
+            --sidebar-width: 280px;
+            --sidebar-closed-width: 90px;
+            
+            --anim-speed: 0.5s;
+            --anim-curve: cubic-bezier(0.23, 1, 0.32, 1); /* "Swift Out" Curve */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+        }
+
+        /* --- 2. ANIMATED BACKGROUND (AURORA) --- */
+        /* Essential for the SIDEBAR BLUR to be visible and beautiful */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: linear-gradient(45deg, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        /* Floating color orbs to highlight Blur */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: floatOrb 10s infinite alternate;
+        }
+        .orb-1 { width: 400px; height: 400px; background: #9d50bb; top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #6e48aa; bottom: 50px; right: -50px; animation-delay: -5s; }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        /* --- 3. SIDEBAR (DUVALLE GLASS) --- */
+        .sidebar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            bottom: 20px; /* Vertically floating */
+            width: var(--sidebar-width);
+            
+            /* THE REAL GLASS EFFECT */
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            
+            transition: width var(--anim-speed) var(--anim-curve), transform var(--anim-speed) var(--anim-curve);
+            z-index: 100;
+            overflow: hidden; /* Keeps the ripple effect inside */
+        }
+
+        /* --- 4. SIDEBAR HEADER --- */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .logo-box {
+            min-width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2b2b2b, #000);
+            color: #fff;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Gold Detail on Logo */
+        .logo-box::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.3s;
+        }
+
+        .brand-title {
+            font-family: 'Cinzel', serif; /* Luxury Font */
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+        
+        .brand-subtitle {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* --- 5. NAVIGATION --- */
+        .nav-list {
+            list-style: none;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 16px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden; /* For Ripple effect */
+        }
+
+        .nav-link i {
+            font-size: 24px;
+            min-width: 24px;
+            transition: transform 0.4s ease;
+        }
+
+        .link-text {
+            white-space: nowrap;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        /* Ultra Modern Hover */
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--accent-color);
+            transform: translateX(5px); /* Smooth slide */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Active Item */
+        .nav-item.active .nav-link {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: var(--accent-glow);
+        }
+
+        .nav-item.active .nav-link:hover {
+            transform: none;
+        }
+
+        /* --- 6. RIPPLE EFFECT (Click wave) --- */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: ripple-anim 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-anim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* --- 7. SIDEBAR FOOTER --- */
+        .sidebar-footer {
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 20px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 20px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .user-card:hover {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* --- 8. STATES: COLLAPSED (DESKTOP CLOSED) --- */
+        .sidebar.collapsed {
+            width: var(--sidebar-closed-width);
+        }
+
+        .sidebar.collapsed .brand-text,
+        .sidebar.collapsed .link-text,
+        .sidebar.collapsed .user-info {
+            opacity: 0;
+            pointer-events: none;
+            display: none; /* Remove from flow */
+        }
+        
+        .sidebar.collapsed .brand {
+            justify-content: center;
+        }
+
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+            padding: 16px 0;
+        }
+
+        /* Tooltip for closed mode */
+        .tooltip {
+            position: absolute;
+            left: 80px;
+            background: var(--accent-color);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        .sidebar.collapsed .nav-item:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            left: 100px; /* Slide animation */
+        }
+
+        /* --- 9. FLOATING TOGGLE BUTTON --- */
+        .toggle-float {
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            z-index: 10;
+            transition: 0.3s;
+            color: var(--accent-color);
+        }
+        
+        .toggle-float:hover {
+            transform: translateY(-50%) scale(1.1);
+            color: #000;
+        }
+
+        /* --- 10. RESPONSIVENESS (MOBILE & TABLET) --- */
+        /* Animated "Hamburger" */
+        .mobile-btn {
+            display: none;
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            z-index: 200;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+        }
+
+        /* Animated Icon (Pure CSS) */
+        .menu-icon, .menu-icon::before, .menu-icon::after {
+            width: 24px;
+            height: 2px;
+            background: var(--text-primary);
+            position: absolute;
+            transition: 0.4s;
+            border-radius: 2px;
+        }
+        .menu-icon::before { content: ''; top: -8px; }
+        .menu-icon::after { content: ''; top: 8px; }
+
+        /* State X (Open) */
+        .mobile-btn.open .menu-icon { background: transparent; }
+        .mobile-btn.open .menu-icon::before { top: 0; transform: rotate(45deg); }
+        .mobile-btn.open .menu-icon::after { top: 0; transform: rotate(-45deg); }
+
+        @media (max-width: 1024px) {
+            .mobile-btn { display: flex; }
+            .toggle-float { display: none; } /* Hides desktop toggle */
+            
+            .sidebar {
+                left: -120%; /* Totally out */
+                top: 0; bottom: 0;
+                width: 300px; /* Wider on mobile */
+                border-radius: 0 30px 30px 0;
+                margin: 0;
+                transition: left 0.6s var(--anim-curve);
+            }
+            
+            .sidebar.active-mobile {
+                left: 0;
+                box-shadow: 20px 0 100px rgba(0,0,0,0.3);
+            }
+
+            /* Dark backdrop on mobile */
+            .backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.3);
+                backdrop-filter: blur(5px);
+                z-index: 90;
+                opacity: 0;
+                visibility: hidden;
+                transition: 0.5s;
+            }
+            .backdrop.active {
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="aurora-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <button class="mobile-btn" id="mobileTrigger">
+        <span class="menu-icon"></span>
+    </button>
+    
+    <div class="backdrop" id="backdrop"></div>
+
+    <nav class="sidebar" id="sidebar">
+        
+        <div class="toggle-float" id="desktopToggle">
+            <i class="ph ph-caret-left-bold"></i>
+        </div>
+
+        <div class="header-section">
+            <div class="brand">
+                <div class="logo-box">
+                    <span>D</span>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">DuValle</span>
+                    <span class="brand-subtitle">Deluxe Edition</span>
+                </div>
+            </div>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item active">
+                <a href="#" class="nav-link ripple-effect">
+                    <i class="ph ph-squares-four"></i>
+                    <span class="link-text">Dashboard</span>
+                </a>
+                <span class="tooltip">Dashboard</span>
+            </li>
+            
+            <li class="nav-item">
+                <a href="#" class="nav-link ripple-effect">
+                    <i class="ph ph-chart-line-up"></i>
+                    <span class="link-text">Analytics</span>
+                </a>
+                <span class="tooltip">Analytics</span>
+            </li>
+            
+            <li class="nav-item">
+                <a href="#" class="nav-link ripple-effect">
+                    <i class="ph ph-wallet"></i>
+                    <span class="link-text">Wallet</span>
+                </a>
+                <span class="tooltip">Wallet</span>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link ripple-effect">
+                    <i class="ph ph-users-three"></i>
+                    <span class="link-text">Clients</span>
+                </a>
+                <span class="tooltip">Clients</span>
+            </li>
+            
+            <li class="nav-item">
+                <a href="#" class="nav-link ripple-effect">
+                    <i class="ph ph-cube"></i>
+                    <span class="link-text">Products</span>
+                </a>
+                <span class="tooltip">Products</span>
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            <div class="user-card ripple-effect">
+                <img src="https://ui-avatars.com/api/?name=Du+Valle&background=2b2b2b&color=fff" alt="User" class="avatar">
+                <div class="user-info brand-text">
+                    <span style="font-weight: 600; font-size: 14px;">Mr. DoVale</span>
+                    <span style="font-size: 11px; color: #666;">User</span>
+                </div>
+                <i class="ph ph-sign-out" style="margin-left: auto; color: #888;"></i>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // Selectors
+        const sidebar = document.getElementById('sidebar');
+        const desktopToggle = document.getElementById('desktopToggle');
+        const mobileTrigger = document.getElementById('mobileTrigger');
+        const backdrop = document.getElementById('backdrop');
+        const rippleElements = document.querySelectorAll('.ripple-effect');
+
+        // 1. Desktop Logic (Collapse/Expand)
+        desktopToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            
+            // Rotates the arrow
+            const icon = desktopToggle.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.classList.replace('ph-caret-left-bold', 'ph-caret-right-bold');
+            } else {
+                icon.classList.replace('ph-caret-right-bold', 'ph-caret-left-bold');
+            }
+        });
+
+        // 2. Mobile Logic (Slide In/Out)
+        function toggleMobile() {
+            sidebar.classList.toggle('active-mobile');
+            mobileTrigger.classList.toggle('open'); // Animates the icon
+            backdrop.classList.toggle('active');
+        }
+
+        mobileTrigger.addEventListener('click', toggleMobile);
+        backdrop.addEventListener('click', toggleMobile);
+
+        // 3. RIPPLE EFFECT (Click wave - Premium Touch)
+        rippleElements.forEach(el => {
+            el.addEventListener('click', function(e) {
+                // Visual active link
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                // If user card, don't set active, if link, set active
+                if(this.parentElement.classList.contains('nav-item')) {
+                    this.parentElement.classList.add('active');
+                }
+
+                // Creates the wave
+                let x = e.clientX - e.target.getBoundingClientRect().left;
+                let y = e.clientY - e.target.getBoundingClientRect().top;
+
+                let ripples = document.createElement('span');
+                ripples.style.left = x + 'px';
+                ripples.style.top = y + 'px';
+                ripples.classList.add('ripple');
+                this.appendChild(ripples);
+
+                setTimeout(() => {
+                    ripples.remove();
+                }, 600);
+                
+                // Closes mobile if clicked
+                if (window.innerWidth <= 1024) {
+                    toggleMobile();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
