@@ -20,5 +20,16 @@
       "CSS",
       "JS"
     ]
+  },
+  {
+    "filename": "sidebar.html",
+    "title": "Sidebar",
+    "icon": "🔧",
+    "description": "A modern, understated, and interactive sidebar design.",
+    "tags": [
+      "HTML",
+      "CSS",
+      "JS"
+    ]
   }
 ]
